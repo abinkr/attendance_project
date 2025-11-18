@@ -1,0 +1,594 @@
+<!-- full updated at.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Attendance Form</title>
+  <link rel="stylesheet" href="at.css">
+</head>
+<body>
+  <div class="card">
+    <h2>Class Attendance</h2>
+
+    <!-- class selection -->
+    <div class="class-buttons" role="tablist" aria-label="Select class">
+      <button class="class-btn" data-class="BCA_1ST_YEAR">BCA 1st Year</button>
+      <button class="class-btn" data-class="BCA_2ND_YEAR">BCA 2nd Year</button>
+      <button class="class-btn" data-class="BCA_3RD_YEAR">BCA 3rd Year</button>
+    </div>
+
+    <!-- subject + date + faculty inputs -->
+    <div class="meta-wrap">
+      <label for="subject">Subject:</label>
+      <input id="subject" class="meta" type="text" placeholder="Type subject name (e.g. Math)" />
+
+      <label for="date">Date:</label>
+      <input id="date" class="meta" type="date" />
+
+      <label for="faculty">Faculty:</label>
+      <input id="faculty" class="meta" type="text" placeholder="Enter faculty name" />
+    </div>
+
+    <div class="controls">
+      <input id="search" placeholder="Filter by roll or name" />
+      <!-- single toggle button replaces separate "mark all present" / "mark all absent" buttons -->
+      <button id="markAllToggle" class="toggle-btn">Mark All Present</button>
+      <button id="exportCsv" class="export">Export CSV</button>
+    </div>
+
+    <table id="studentsTable" aria-live="polite">
+      <thead>
+        <tr><th>Roll</th><th>Name</th><th>Status</th><th>Action</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    // students per class
+    const CLASS_DATA = {
+      BCA_1ST_YEAR: [
+        { roll: '01', name: 'Student 01' },
+        { roll: '02', name: 'Student 02' },
+        { roll: '03', name: 'Student 03' },
+        { roll: '04', name: 'Student 04' },
+        { roll: '05', name: 'Student 05' },
+        { roll: '06', name: 'Student 06' },
+        { roll: '07', name: 'Student 07' },
+        { roll: '08', name: 'Student 08' },
+        { roll: '09', name: 'Student 09' },
+        { roll: '10', name: 'Student 10' },
+        { roll: '11', name: 'Student 11' },
+        { roll: '12', name: 'Student 12' },
+        { roll: '13', name: 'Student 13' },
+        { roll: '14', name: 'Student 14' },
+        { roll: '15', name: 'Student 15' },
+        { roll: '16', name: 'Student 16' },
+        { roll: '17', name: 'Student 17' },
+        { roll: '18', name: 'Student 18' },
+        { roll: '19', name: 'Student 19' },
+        { roll: '20', name: 'Student 20' },
+        { roll: '21', name: 'Student 21' },
+        { roll: '22', name: 'Student 22' },
+        { roll: '23', name: 'Student 23' },
+        { roll: '24', name: 'Student 24' },
+        { roll: '25', name: 'Student 25' },
+        { roll: '26', name: 'Student 26' },
+        { roll: '27', name: 'Student 27' },
+        { roll: '28', name: 'Student 28' },
+        { roll: '29', name: 'Student 29' },
+        { roll: '30', name: 'Student 30' },
+        { roll: '31', name: 'Student 31' },
+        { roll: '32', name: 'Student 32' },
+        { roll: '33', name: 'Student 33' },
+        { roll: '34', name: 'Student 34' },
+        { roll: '35', name: 'Student 35' },
+        { roll: '36', name: 'Student 36' },
+        { roll: '37', name: 'Student 37' },
+        { roll: '38', name: 'Student 38' },
+        { roll: '39', name: 'Student 39' },
+        { roll: '40', name: 'Student 40' },
+        { roll: '41', name: 'Student 41' },
+        { roll: '42', name: 'Student 42' },
+        { roll: '43', name: 'Student 43' },
+        { roll: '44', name: 'Student 44' },
+        { roll: '45', name: 'Student 45' },
+        { roll: '46', name: 'Student 46' },
+        { roll: '47', name: 'Student 47' },
+        { roll: '48', name: 'Student 48' },
+        { roll: '49', name: 'Student 49' },
+        { roll: '50', name: 'Student 50' },
+        { roll: '51', name: 'Student 51' },
+        { roll: '52', name: 'Student 52' },
+        { roll: '53', name: 'Student 53' },
+        { roll: '54', name: 'Student 54' },
+        { roll: '55', name: 'Student 55' },
+        { roll: '56', name: 'Student 56' },
+        { roll: '57', name: 'Student 57' },
+        { roll: '58', name: 'Student 58' },
+        { roll: '59', name: 'Student 59' },
+        { roll: '60', name: 'Student 60' },
+        { roll: '61', name: 'Student 61' },
+        { roll: '62', name: 'Student 62' },
+        { roll: '63', name: 'Student 63' },
+        { roll: '64', name: 'Student 64' },
+        { roll: '65', name: 'Student 65' },
+        { roll: '66', name: 'Student 66' },
+        { roll: '67', name: 'Student 67' },
+        { roll: '68', name: 'Student 68' },
+        { roll: '69', name: 'Student 69' },
+        { roll: '70', name: 'Student 70' },
+        { roll: '71', name: 'Student 71' },
+        { roll: '72', name: 'Student 72' },
+        { roll: '73', name: 'Student 73' },
+        { roll: '74', name: 'Student 74' },
+        { roll: '75', name: 'Student 75' },
+        { roll: '76', name: 'Student 76' },
+        { roll: '77', name: 'Student 77' },
+        { roll: '78', name: 'Student 78' },
+        { roll: '79', name: 'Student 79' },
+        { roll: '80', name: 'Student 80' },
+        { roll: '81', name: 'Student 81' },
+        { roll: '82', name: 'Student 82' },
+        { roll: '83', name: 'Student 83' },
+        { roll: '84', name: 'Student 84' },
+        { roll: '85', name: 'Student 85' },
+        { roll: '86', name: 'Student 86' },
+        { roll: '87', name: 'Student 87' },
+        { roll: '88', name: 'Student 88' },
+        { roll: '89', name: 'Student 89' },
+        { roll: '90', name: 'Student 90' },
+        { roll: '91', name: 'Student 91' },
+        { roll: '92', name: 'Student 92' },
+        { roll: '93', name: 'Student 93' },
+        { roll: '94', name: 'Student 94' },
+        { roll: '95', name: 'Student 95' },
+        { roll: '96', name: 'Student 96' },
+        { roll: '97', name: 'Student 97' },
+        { roll: '98', name: 'Student 98' },
+        { roll: '99', name: 'Student 99' },
+        { roll: '100', name: 'Student 100' },
+        { roll: '101', name: 'Student 101' },
+        { roll: '102', name: 'Student 102' },
+        { roll: '103', name: 'Student 103' },
+        { roll: '104', name: 'Student 104' },
+        { roll: '105', name: 'Student 105' },
+        { roll: '106', name: 'Student 106' },
+        { roll: '107', name: 'Student 107' }
+      ],
+      BCA_2ND_YEAR: [
+        { roll: '01', name: 'Student 01' },
+        { roll: '02', name: 'Student 02' },
+        { roll: '03', name: 'Student 03' },
+        { roll: '04', name: 'Student 04' },
+        { roll: '05', name: 'Student 05' },
+        { roll: '06', name: 'Student 06' },
+        { roll: '07', name: 'Student 07' },
+        { roll: '08', name: 'Student 08' },
+        { roll: '09', name: 'Student 09' },
+        { roll: '10', name: 'Student 10' },
+        { roll: '11', name: 'Student 11' },
+        { roll: '12', name: 'Student 12' },
+        { roll: '13', name: 'Student 13' },
+        { roll: '14', name: 'Student 14' },
+        { roll: '15', name: 'Student 15' },
+        { roll: '16', name: 'Student 16' },
+        { roll: '17', name: 'Student 17' },
+        { roll: '18', name: 'Student 18' },
+        { roll: '19', name: 'Student 19' },
+        { roll: '20', name: 'Student 20' },
+        { roll: '21', name: 'Student 21' },
+        { roll: '22', name: 'Student 22' },
+        { roll: '23', name: 'Student 23' },
+        { roll: '24', name: 'Student 24' },
+        { roll: '25', name: 'Student 25' },
+        { roll: '26', name: 'Student 26' },
+        { roll: '27', name: 'Student 27' },
+        { roll: '28', name: 'Student 28' },
+        { roll: '29', name: 'Student 29' },
+        { roll: '30', name: 'Student 30' },
+        { roll: '31', name: 'Student 31' },
+        { roll: '32', name: 'Student 32' },
+        { roll: '33', name: 'Student 33' },
+        { roll: '34', name: 'Student 34' },
+        { roll: '35', name: 'Student 35' },
+        { roll: '36', name: 'Student 36' },
+        { roll: '37', name: 'Student 37' },
+        { roll: '38', name: 'Student 38' },
+        { roll: '39', name: 'Student 39' },
+        { roll: '40', name: 'Student 40' },
+        { roll: '41', name: 'Student 41' },
+        { roll: '42', name: 'Student 42' },
+        { roll: '43', name: 'Student 43' },
+        { roll: '44', name: 'Student 44' },
+        { roll: '45', name: 'Student 45' },
+        { roll: '46', name: 'Student 46' },
+        { roll: '47', name: 'Student 47' },
+        { roll: '48', name: 'Student 48' },
+        { roll: '49', name: 'Student 49' },
+        { roll: '50', name: 'Student 50' },
+        { roll: '51', name: 'Student 51' },
+        { roll: '52', name: 'Student 52' },
+        { roll: '53', name: 'Student 53' },
+        { roll: '54', name: 'Student 54' },
+        { roll: '55', name: 'Student 55' },
+        { roll: '56', name: 'Student 56' },
+        { roll: '57', name: 'Student 57' },
+        { roll: '58', name: 'Student 58' },
+        { roll: '59', name: 'Student 59' },
+        { roll: '60', name: 'Student 60' },
+        { roll: '61', name: 'Student 61' },
+        { roll: '62', name: 'Student 62' },
+        { roll: '63', name: 'Student 63' },
+        { roll: '64', name: 'Student 64' },
+        { roll: '65', name: 'Student 65' },
+        { roll: '66', name: 'Student 66' },
+        { roll: '67', name: 'Student 67' },
+        { roll: '68', name: 'Student 68' },
+        { roll: '69', name: 'Student 69' },
+        { roll: '70', name: 'Student 70' },
+        { roll: '71', name: 'Student 71' },
+        { roll: '72', name: 'Student 72' },
+        { roll: '73', name: 'Student 73' },
+        { roll: '74', name: 'Student 74' },
+        { roll: '75', name: 'Student 75' },
+        { roll: '76', name: 'Student 76' },
+        { roll: '77', name: 'Student 77' },
+        { roll: '78', name: 'Student 78' },
+        { roll: '79', name: 'Student 79' },
+        { roll: '80', name: 'Student 80' },
+        { roll: '81', name: 'Student 81' },
+        { roll: '82', name: 'Student 82' },
+        { roll: '83', name: 'Student 83' },
+        { roll: '84', name: 'Student 84' },
+        { roll: '85', name: 'Student 85' },
+        { roll: '86', name: 'Student 86' },
+        { roll: '87', name: 'Student 87' },
+        { roll: '88', name: 'Student 88' },
+        { roll: '89', name: 'Student 89' },
+        { roll: '90', name: 'Student 90' },
+        { roll: '91', name: 'Student 91' },
+        { roll: '92', name: 'Student 92' },
+        { roll: '93', name: 'Student 93' },
+        { roll: '94', name: 'Student 94' },
+        { roll: '95', name: 'Student 95' },
+        { roll: '96', name: 'Student 96' },
+        { roll: '97', name: 'Student 97' },
+        { roll: '98', name: 'Student 98' },
+        { roll: '99', name: 'Student 99' },
+        { roll: '100', name: 'Student 100' },
+        { roll: '101', name: 'Student 101' },
+        { roll: '102', name: 'Student 102' },
+        { roll: '103', name: 'Student 103' },
+        { roll: '104', name: 'Student 104' },
+        { roll: '105', name: 'Student 105' },
+        { roll: '106', name: 'Student 106' },
+        { roll: '107', name: 'Student 107' }
+       
+       
+      ],
+      BCA_3RD_YEAR: [
+        { roll: '01', name: 'BHAGYASHRI'},
+        { roll: '02', name: 'SAMREEN KOUSER'},
+        { roll: '03', name: 'HARSHITHA T N'},
+        { roll: '04', name: 'MEGHANA M N'},
+        { roll: '05', name: 'ARIF ANEESH'},
+        { roll: '06', name: 'AKASH A THAKADIYEL'},
+        { roll: '07', name: 'ADITHYAN KUMAR'},
+        { roll: '08', name: 'YADHU KRISHNA E M'},
+        { roll: '09', name: 'ARSHA M V' },
+        { roll: '10', name: 'NANDANA P P'},
+        { roll: '11', name: 'PRANAV VENUGOPAL' },
+        { roll: '12', name: 'HASHIM FIRSHA C M' },
+        { roll: '13', name: 'SWAGATA RAY' },
+        { roll: '14', name: 'ARJUN GANGA T A' },
+        { roll: '15', name: 'AVIN ALEX BINU' },
+        { roll: '16', name: 'NAVANEETH RAJU' },
+        { roll: '17', name: 'ASWIN SANKAR T K' },
+        { roll: '18', name: 'ALAN C BIJU' },
+        { roll: '19', name: 'ARIN DEY' },
+        { roll: '20', name: 'PAVANA A U' },
+        { roll: '21', name: 'NEHA M' },
+        { roll: '22', name: 'VYSHNAV P' },
+        { roll: '23', name: 'VISHNUDEV T R' },
+        { roll: '24', name: 'RAJALAKSHMI K J' },
+        { roll: '25', name: 'MUHAMMED AADIL M C' },
+        { roll: '26', name: 'HEMANTH C' },
+        { roll: '27', name: 'ANGITHA S' },
+        { roll: '28', name: 'ARUNDAS K' },
+        { roll: '29', name: 'ARCHANA K K' },
+        { roll: '30', name: 'ASHFIN NISHAN T A' },
+        { roll: '31', name: 'MIDHUN M' },
+        { roll: '32', name: 'ABIN M' },
+        { roll: '33', name: 'ADITYA K P' },
+        { roll: '34', name: 'ABIN K.R' },
+        { roll: '35', name: 'ADITHYAN A' },
+        { roll: '36', name: 'ABHISHEK' },
+        { roll: '37', name: 'GOPIKA KRISHNA E' },
+        { roll: '38', name: 'SHAMILA O M' },
+        { roll: '39', name: 'ANANYA P C' },
+        { roll: '40', name: 'SIDHARTH P K' },
+        { roll: '41', name: 'SHOJIL T' },
+        { roll: '42', name: 'SREERAG K S' },
+        { roll: '43', name: 'ANUGRAHA S' },
+        { roll: '44', name: 'BHAGATHKRISHNA P R' },
+        { roll: '45', name: 'ANNSHIYA SHAJI' },
+        { roll: '46', name: 'A P SHARIQ' },
+        { roll: '47', name: 'SHAMMAS C B' },
+        { roll: '48', name: 'SREERAG T S' },
+        { roll: '49', name: 'BAVIN K B' },
+        { roll: '50', name: 'NITHEESH KRISHNA P R' },
+        { roll: '51', name: 'NIRMAL KRISHNA N C' },
+        { roll: '52', name: 'ABINAV C M' },
+        { roll: '53', name: 'MOHAMMED NISHAD' },
+        { roll: '54', name: 'ALDRIN SHAJI' },
+        { roll: '55', name: 'ABIN SHIBY' },
+        { roll: '56', name: 'ADHIK S' },
+        { roll: '57', name: 'ADHITHYAN A' },
+        { roll: '58', name: 'AMBIKA' },
+        { roll: '59', name: 'ANANYA SAJI' },
+        { roll: '60', name: 'DHANYA R' },
+        { roll: '61', name: 'ADITH J' },
+        { roll: '62', name: 'ANAGHA ASHOKAN' },
+        { roll: '63', name: 'SIVAPRASAD' },
+        { roll: '64', name: 'ANUGRAH M R' },
+        { roll: '65', name: 'ABDUL FATHAH M J' },
+        { roll: '66', name: 'NEIJOY SEM HALAM' },
+        { roll: '67', name: 'SNEHA P V' },
+        { roll: '68', name: 'NIKITHA K' },
+        { roll: '69', name: 'MALLIKARJUN J ANGADI' },
+        { roll: '70', name: 'MD ASLAM ANSARI' },
+        { roll: '71', name: 'VAISHNAVI S' },
+        { roll: '72', name: 'ABHISHEK P M' },
+        { roll: '73', name: 'ADHWAYTH S' },
+        { roll: '74', name: 'NIVED S RAJ' },
+        { roll: '75', name: 'AKASH RAJU' },
+        { roll: '76', name: 'SNEHA R' },
+        { roll: '77', name: 'AKSHAY SAJITH K' },
+        { roll: '78', name: 'ANNIE BLESSY RODRICKS' },
+        { roll: '79', name: 'AGIL' },
+        { roll: '80', name: 'ABHINAV P' },
+        { roll: '81', name: 'SURYAKANT CHAUDHARY' },
+        { roll: '82', name: 'SAUGANDH R K PAL' },
+        { roll: '83', name: 'ALBY ROSHEN' },
+        { roll: '84', name: 'AKHILESH E T' },
+        { roll: '85', name: 'MUHAMMED ANZIL V P' },
+        { roll: '86', name: 'AISWARYA K Y' },
+        { roll: '87', name: 'S JAYA KUMAR' },
+        { roll: '88', name: 'ANANDU M.S' },
+        { roll: '89', name: 'N HARIHARAN' },
+        { roll: '90', name: 'SANJAY S' },
+        { roll: '91', name: 'ARCHANA P P' },
+        { roll: '92', name: 'SACHIN GADDEPPA MADABHAVI' },
+        { roll: '93', name: 'MOHAMMED FAYAZ C F' },
+        { roll: '94', name: 'SIDHARTHAN S' },
+        { roll: '95', name: 'VINATH V N' },
+        { roll: '96', name: 'THEJUS KRISHNA' },
+        { roll: '97', name: 'ANAY JOY' },
+        { roll: '98', name: 'SALAHUDHEEN P U' },
+        { roll: '99', name: 'AMAL SAJU' },
+        { roll: '100', name: 'SURYA ANANTH S S' },
+        { roll: '101', name: 'MOHAMMED BILAL K' },
+        { roll: '102', name: 'NAVEED ALI KHAN P' },
+        { roll: '103', name: 'SAYAN SAHA' },
+        { roll: '104', name: 'ZARMANBUM RANGLONG' },
+        { roll: '105', name: 'ARUN V S' },
+        { roll: '106', name: 'ALBIN TOM' },
+        { roll: '107', name: 'AMEESHA SANAM K A' },
+        
+      ]
+    };
+
+  const tbody = document.querySelector('#studentsTable tbody');
+  const search = document.getElementById('search');
+  const subjectInput = document.getElementById('subject');
+  const dateInput = document.getElementById('date');
+  const facultyInput = document.getElementById('faculty');
+  const classButtons = Array.from(document.querySelectorAll('.class-btn'));
+  const markAllToggle = document.getElementById('markAllToggle');
+
+    let currentClass = 'BCA_1ST_YEAR'; // default class
+    let students = []; // will hold current class students with status
+
+    function todayISO() {
+      const d = new Date();
+      const mm = String(d.getMonth()+1).padStart(2,'0');
+      const dd = String(d.getDate()).padStart(2,'0');
+      return `${d.getFullYear()}-${mm}-${dd}`;
+    }
+
+    // sanitise a string for use in filenames
+    function sanitizeName(s) {
+      return (s || 'attendance')
+        .trim()
+        // replace 1+ disallowed characters with a single underscore
+        .replace(/[^a-z0-9\-]+/ig, '_')
+        // remove leading/trailing underscores
+        .replace(/^_+|_+$/g, '')
+        .toLowerCase()
+        .slice(0, 100);
+    }
+
+    // format date as MM/DD/YYYY (e.g. 11/18/2025)
+    function formatShortDateMMDDYYYY(dateRaw) {
+      if (!dateRaw) return '';
+      const d = new Date(dateRaw);
+      if (Number.isNaN(d.getTime())) return dateRaw;
+      return `${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}/${d.getFullYear()}`;
+    }
+
+    // format time as HH:MM:SS (24-hour)
+    function formatTimeHHMMSS(dateLike) {
+      const d = (dateLike instanceof Date) ? dateLike : new Date(dateLike);
+      if (Number.isNaN(d.getTime())) return '';
+      const hh = String(d.getHours()).padStart(2,'0');
+      const mm = String(d.getMinutes()).padStart(2,'0');
+      const ss = String(d.getSeconds()).padStart(2,'0');
+      return `${hh}:${mm}:${ss}`;
+    }
+
+    // storage keys per class
+    function keyStudents(cls){ return `attendance_students_${cls}`; }
+    function keyMeta(cls){ return `attendance_meta_${cls}`; }
+
+    function saveState() {
+      localStorage.setItem(keyStudents(currentClass), JSON.stringify(students));
+      localStorage.setItem(keyMeta(currentClass), JSON.stringify({
+        subject: subjectInput.value || '',
+        date: dateInput.value || '',
+        faculty: facultyInput.value || ''
+      }));
+    }
+
+    function loadStateForClass(cls) {
+      // initialize students from CLASS_DATA (deep copy) and default status absent
+      const base = (CLASS_DATA[cls] || []).map(s => ({ roll: s.roll, name: s.name, status: 'absent' }));
+      const raw = localStorage.getItem(keyStudents(cls));
+      if (raw) {
+        try {
+          const arr = JSON.parse(raw);
+          if (Array.isArray(arr)) {
+            // merge saved statuses into base by roll
+            const map = new Map(arr.map(s => [s.roll, s.status]));
+            base.forEach(b => { if (map.has(b.roll)) b.status = map.get(b.roll); });
+          }
+        } catch(e){}
+      }
+      // load meta
+      const metaRaw = localStorage.getItem(keyMeta(cls));
+      if (metaRaw) {
+        try {
+          const meta = JSON.parse(metaRaw);
+          subjectInput.value = meta.subject || '';
+          dateInput.value = meta.date || '';
+          facultyInput.value = meta.faculty || '';
+        } catch(e){}
+      } else {
+        if (!dateInput.value) dateInput.value = todayISO();
+      }
+      students = base;
+    }
+
+    function setActiveClassButton(cls){
+      classButtons.forEach(b => b.classList.toggle('active', b.dataset.class === cls));
+    }
+
+    function render(filter='') {
+      tbody.innerHTML = '';
+      const q = (filter || '').trim().toLowerCase();
+      students.forEach((s) => {
+        if (q && !(s.roll.toLowerCase().includes(q) || s.name.toLowerCase().includes(q))) return;
+        const tr = document.createElement('tr');
+
+        const tdRoll = document.createElement('td'); tdRoll.textContent = s.roll; tr.appendChild(tdRoll);
+        const tdName = document.createElement('td'); tdName.textContent = s.name; tr.appendChild(tdName);
+
+        const tdStatus = document.createElement('td');
+        const span = document.createElement('span');
+        span.className = 'status ' + (s.status === 'present' ? 'present' : 'absent');
+        span.textContent = s.status === 'present' ? 'Present' : 'Absent';
+        tdStatus.appendChild(span);
+        tr.appendChild(tdStatus);
+
+        const tdAction = document.createElement('td');
+        const btn = document.createElement('button');
+        btn.className = 'toggle-btn';
+        btn.textContent = s.status === 'present' ? 'Mark Absent' : 'Mark Present';
+        btn.addEventListener('click', () => {
+          s.status = s.status === 'present' ? 'absent' : 'present';
+          saveState();
+          render(search.value);
+        });
+        tdAction.appendChild(btn);
+        tr.appendChild(tdAction);
+
+        tbody.appendChild(tr);
+      });
+      // update the toggle button text/color based on current state
+      try{ updateToggleText(); }catch(e){}
+    }
+
+    // class button handlers
+    classButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cls = btn.dataset.class;
+        if (cls === currentClass) return;
+        currentClass = cls;
+        setActiveClassButton(cls);
+        loadStateForClass(cls);
+        render(search.value);
+      });
+    });
+
+    // helper to determine whether all students are currently marked present
+    function allPresent(){ return students.length > 0 && students.every(s => s.status === 'present'); }
+
+    // update the toggle button text and color to reflect current state
+    function updateToggleText(){
+      if(!markAllToggle) return;
+      if(allPresent()){
+        markAllToggle.textContent = 'Mark All Absent';
+        // blue when action will mark absent
+        markAllToggle.style.background = '#0683f0';
+      } else {
+        markAllToggle.textContent = 'Mark All Present';
+        // green when action will mark present
+        markAllToggle.style.background = '#28a745';
+      }
+      markAllToggle.style.color = '#fff';
+    }
+
+    // single toggle button: if any absent -> mark all present, otherwise mark all absent
+    if(markAllToggle){
+      markAllToggle.addEventListener('click', () => {
+        const makePresent = !allPresent();
+        students.forEach(s => s.status = makePresent ? 'present' : 'absent');
+        saveState(); render(search.value);
+      });
+    }
+
+    document.getElementById('exportCsv').addEventListener('click', () => {
+      const subject = subjectInput.value || '';
+      const dateRaw = dateInput.value || todayISO();             // 'YYYY-MM-DD'
+      const shortDate = formatShortDateMMDDYYYY(dateRaw);        // 'MM/DD/YYYY' (e.g. 11/18/2025)
+      const exactTime = formatTimeHHMMSS(new Date());           // 'HH:MM:SS'
+      const faculty = facultyInput.value || '';
+
+      const rows = [
+        ['Class', currentClass],
+        ['Subject', subject],
+        ['Date', shortDate],
+        ['Time', exactTime],
+        ['Faculty', faculty],
+        []
+      ].concat([['Roll','Name','Status'], ...students.map(s => [s.roll, s.name, s.status])]);
+
+      const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+      // prepend BOM so Excel recognises UTF-8
+      const blob = new Blob(["\uFEFF", csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+
+      // filename uses shortDate (slashes -> dashes) and time (colons removed)
+      const datePart = shortDate.replace(/\//g, '-');    // 11-18-2025
+      const timePart = exactTime.replace(/:/g, '');      // 143205
+      const fileNameSafe = `${currentClass}_${sanitizeName(subject)}_${datePart}_${timePart}.csv`;
+
+      const a = document.createElement('a'); a.href = url; a.download = fileNameSafe; a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    search.addEventListener('input', () => render(search.value));
+    subjectInput.addEventListener('input', saveState);
+    dateInput.addEventListener('input', saveState);
+    facultyInput.addEventListener('input', saveState);
+
+    // init default class
+    (function init(){
+      setActiveClassButton(currentClass);
+      loadStateForClass(currentClass);
+      render();
+    })();
+  </script>
+</body>
+</html>
