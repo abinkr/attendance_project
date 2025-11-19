@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Attendance Form</title>
   <link rel="stylesheet" href="at.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
 </head>
 <body>
   <div class="card">
@@ -23,17 +24,17 @@
       <label for="subject">Subject:</label>
       <input id="subject" class="meta" type="text" placeholder="Type subject name (e.g. Math)" />
 
-      <label for="date">Date:</label>
-      <input id="date" class="meta" type="date" />
-
       <label for="faculty">Faculty:</label>
       <input id="faculty" class="meta" type="text" placeholder="Enter faculty name" />
+
+      <label for="date">Date:</label>
+      <input id="date" class="meta" type="date" />
     </div>
 
     <div class="controls">
       <input id="search" placeholder="Filter by roll or name" />
       <!-- single toggle button replaces separate "mark all present" / "mark all absent" buttons -->
-      <button id="markAllToggle" class="toggle-btn">Mark All Present</button>
+      <button id="markAllToggle" class="toggle-btn-all">Mark All Present</button>
       <button id="exportCsv" class="export">Export CSV</button>
     </div>
 
@@ -493,7 +494,8 @@
 
         const tdAction = document.createElement('td');
         const btn = document.createElement('button');
-        btn.className = 'toggle-btn';
+        // add state class so CSS can colour the button appropriately
+        btn.className = 'toggle-btn ' + (s.status === 'present' ? 'present' : 'absent');
         btn.textContent = s.status === 'present' ? 'Mark Absent' : 'Mark Present';
         btn.addEventListener('click', () => {
           s.status = s.status === 'present' ? 'absent' : 'present';
@@ -529,13 +531,14 @@
       if(!markAllToggle) return;
       if(allPresent()){
         markAllToggle.textContent = 'Mark All Absent';
-        // blue when action will mark absent
-        markAllToggle.style.background = '#0683f0';
+        markAllToggle.classList.remove('present');
+        markAllToggle.classList.add('absent');
       } else {
         markAllToggle.textContent = 'Mark All Present';
-        // green when action will mark present
-        markAllToggle.style.background = '#28a745';
+        markAllToggle.classList.remove('absent');
+        markAllToggle.classList.add('present');
       }
+      // ensure readable text color (kept inline for reliability)
       markAllToggle.style.color = '#fff';
     }
 
@@ -558,9 +561,9 @@
       const rows = [
         ['Class', currentClass],
         ['Subject', subject],
+        ['Faculty', faculty],
         ['Date', shortDate],
         ['Time', exactTime],
-        ['Faculty', faculty],
         []
       ].concat([['Roll','Name','Status'], ...students.map(s => [s.roll, s.name, s.status])]);
 

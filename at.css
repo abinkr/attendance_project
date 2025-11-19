@@ -6,6 +6,10 @@
   background: #fff;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
 }
+.card h2 {
+  font-family: "Sofia", sans-serif;
+  letter-spacing: 0.2rem;
+}
 .class-buttons {
   display: flex;
   gap: 8px;
@@ -25,11 +29,18 @@
   border-color: #007bff;
 }
 .meta-wrap {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 8px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+    flex-direction: column;
+}
+.meta-wrap .meta 
+{
+  height: 22px;
+  padding: 0 5px;
+  border-radius: 0.5rem;
 }
 .meta-wrap label {
   min-width: 60px;
@@ -85,5 +96,30 @@ td {
   background: #28a745;
 }
 .absent {
+  background: #dc3545;
+}
+
+/* Action buttons: green when they will mark present, red when they will mark absent */
+.toggle-btn.present {
+  background: #dc3545;
+  color: #fff;
+}
+.toggle-btn.absent {
+  background: #28a745;
+  color: #fff;
+}
+.toggle-btn-all{
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 0;
+  cursor: pointer;
+  background: #dc3545;
+  color: #fff;
+}
+.toggle-btn-all.present {
+  background: #28a745;
+  color: #fff;
+}
+.toggle-btn-all.absent {
   background: #dc3545;
 }
