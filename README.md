@@ -2,9 +2,11 @@
 
 ## 📌 Project Overview
 
-A **web-based attendance management system** for Harsha Institution of Management Studies. This application allows faculty members to track student attendance with ease. Teachers can mark students as present or absent, filter by class/roll number/name, and export attendance records as CSV files for record-keeping and administrative purposes.
+A **web-based attendance management system** for Harsha Institution of Management Studies. This application allows faculty members to track student attendance with ease. Teachers can mark students [...]
 
 **Built with:** HTML, CSS, JavaScript (Frontend-only, no backend required)
+
+**🌐 Live Website:** https://abinkr.github.io/attendance_project/
 
 ---
 
@@ -849,4 +851,3 @@ The hardcoded credentials in `index.js` are **for development purposes only**. B
 **Status:** Active Development
 
 ---
-
